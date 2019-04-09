@@ -23,6 +23,21 @@ Tableparser.parse_to_struct(io, MyRow)
 # => [#<struct MyRow col1="val", col2="val">, #<struct MyRow col1="val", col2="val">]
 ```
 
+Also comes with a handy `tableparser` exectuable:
+
+```bash
+$ echo "SELECT 1 AS one, 2 AS two" | mysql --table
++-----+-----+
+| one | two |
++-----+-----+
+|   1 |   2 |
++-----+-----+
+
+$ echo "SELECT 1 AS one, 2 AS two" | mysql --table | tableparser
+one,two
+1,2
+```
+
 ## Installation
 
 Add this line to your application's Gemfile:
