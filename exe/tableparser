@@ -1,0 +1,20 @@
+#!/usr/bin/env ruby
+begin
+  require 'tableparser'
+rescue LoadError
+  lib_dir = File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib'))
+  $LOAD_PATH.unshift(lib_dir)
+  require 'tableparser'
+end
+
+if STDIN.tty?
+  abort "Usage: cat RESULTS | #{$PROGRAM_NAME}"
+end
+
+require 'csv'
+
+CSV.instance(STDOUT) do |csv|
+  Tableparser.parse(STDIN) do |row|
+    csv << row
+  end
+end

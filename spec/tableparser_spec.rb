@@ -25,6 +25,17 @@ RSpec.describe Tableparser do
       ])
     end
 
+    it 'streams results via block syntax' do
+      arr = []
+      Tableparser.parse(io) { |row| arr << row }
+
+      expect(arr).to eq([
+        ['col1', 'col2'],
+        ['val', 'val'],
+        ['val', 'val'],
+      ])
+    end
+
     context 'with blank values in rows' do
       let(:io) do
         StringIO.new <<~EOS
@@ -73,6 +84,16 @@ RSpec.describe Tableparser do
   describe '#parse_to_struct' do
     it 'parses out into rows' do
       expect(Tableparser.parse_to_struct(io, struct_class)).to eq([
+        struct_class.new('val', 'val'),
+        struct_class.new('val', 'val'),
+      ])
+    end
+
+    it 'streams results via block syntax' do
+      arr = []
+      Tableparser.parse_to_struct(io, struct_class) { |row| arr << row }
+
+      expect(arr).to eq([
         struct_class.new('val', 'val'),
         struct_class.new('val', 'val'),
       ])
