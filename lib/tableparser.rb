@@ -3,10 +3,10 @@ require "tableparser/version"
 # Helpers for table formatted results
 module Tableparser
   # @overload parse(io)
-  #   @param [String] io io with source data to parse
+  #   @param [IO] io io with source data to parse
   #   @return [Array<Array<String>>] rows
   # @overload parse(io, &block)
-  #   @param [String] io io with source data to parse
+  #   @param [IO] io io with source data to parse
   #   @yieldparam [Array<String>] row each row
   #
   # Parses output from tables (often from SQL queries) to CSV-like array of
@@ -21,6 +21,8 @@ module Tableparser
   #     | val     | val     |
   #     | val     | val     |
   #     +---------+---------+
+  #
+  # The block form streams from the input IO instead of reading all at once
   #
   # @example
   #   Tableparser.parse(STDIN) # =>
@@ -43,12 +45,12 @@ module Tableparser
   end
 
   # @overload parse_to_struct(io, struct)
-  #   @param [String] io io with source data to parse
+  #   @param [IO] io io with source data to parse
   #   @param [Class] struct class that rows will be parsed as
   #   @return [Array<struct>] an array of instances of the +struct+ with fields
   #     set from the corresponding columns
   # @overload parse(io, struct, &block)
-  #   @param [String] io io with source data to parse
+  #   @param [IO] io io with source data to parse
   #   @yieldparam [struct] row each row
   #
   # Assumes +struct+ was from +Struct.new(:col1, :col2)+. The code sets values on
@@ -56,6 +58,8 @@ module Tableparser
   #
   # *Note*: the code will downcase column names when setting.
   #
+  # Since it builds on +.parse+, the block here form also streams from the
+  # input IO
   def self.parse_to_struct(io, struct)
     cols = nil
 
