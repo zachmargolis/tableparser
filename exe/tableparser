@@ -8,13 +8,19 @@ rescue LoadError
 end
 
 if STDIN.tty?
-  abort "Usage: cat RESULTS | #{$PROGRAM_NAME}"
+  abort "Usage: cat RESULTS | #{$PROGRAM_NAME} [--no-header]"
 end
 
 require 'csv'
 
+skip_header = ARGV.include?('--no-header')
+
 CSV.instance(STDOUT) do |csv|
   Tableparser.parse(STDIN) do |row|
+    if skip_header
+      skip_header = false
+      next
+    end
     csv << row
   end
 end

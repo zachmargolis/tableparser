@@ -44,6 +44,17 @@ RSpec.describe 'exe/' do
           val,val
         EOS
       end
+
+      context '--no-header argument' do
+        it 'skips the header row' do
+          output = exe('tableparser', '--no-header', stdin: stdin)
+
+          expect(output).to eq(<<~EOS)
+            val,val
+            val,val
+          EOS
+        end
+      end
     end
   end
 
